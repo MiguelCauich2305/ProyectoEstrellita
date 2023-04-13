@@ -24,14 +24,13 @@ class Ventana < FXMainWindow
         mat3= FXComboBox.new(hFrame2, 15)
         
         db =SQLite3::Database.open 'ProyRuby.db'
-        query= db.prepare "select * from Materias"
+        query= db.prepare "select * from MateriasFK"
         data= query.execute
 
         begin
-
-            for materia  in data
-                var= materia[0]
-                mat1.appendItem( var)
+            for linea in data
+                var= linea[0]
+                mat1.appendItem( var )
                 mat2.appendItem( var)
                 mat3.appendItem( var)
             end
@@ -43,12 +42,11 @@ class Ventana < FXMainWindow
             query.close if query
             db.close if db
         end
+        
+        
+        
 
-        
-        
-
-        
-        
+      
         hFrame3 = FXHorizontalFrame.new(self)
         b1 = FXButton.new(hFrame3, "Registrar nuevo maestro")
         b1.connect(SEL_COMMAND) do
@@ -63,8 +61,9 @@ class Ventana < FXMainWindow
 
         b3= FXButton.new(hFrame3, "Modificar") #debe de poner nombr emaestro
         b3.connect(SEL_COMMAND) do
-            #modificar()
+            modificar()
         end
+
     end
 
 
@@ -93,48 +92,146 @@ class Ventana < FXMainWindow
         end
     end
 
-    def registrar_nuevo_maestro(nombre_obtenido,m1, m2, m3)
+    def registrar_nuevo_maestro(nombre_teacher,m1, m2, m3)
+        print "nombre teacher" ,nombre_teacher
+        materia1_estado= "libre"
+        materia2_estado= "libre"
+        materia3_estado= "libre"
+
         begin 
             db =SQLite3::Database.open 'ProyRuby.db'
-            query= db.prepare "SELECT * from Materias"
+            query= db.prepare "SELECT Nombre_maestro from MateriasFK 
+            where Nombre_materia= '#{m1}';"
             data= query.execute
 
             for linea in data
-                nombre_materia= linea[0]
-                nombre_maestro= linea[1]
+                print "linea1", linea
+                nombre_maestro= linea[0]
+                puts nombre_maestro
 
-                if nombre_obtenido == nombrecito
-                    ban="Ya hay un usuario con el mismo nombre. "
-
-                   
-                else
-
-                    begin 
-                        #query= db.prepare "INSERT INTO Logins values('#{nombre_obtenido}', '#{contraseña}')"
-                        data= query.execute
-
-                    rescue SQLite3::Exception => e
-                        puts "Ecepsion"
-                        puts e
-                    
-
-                    end
-                    
-                end
+                if nombre_maestro != nil
+                    materia1_estado="ocupada"
+                end 
             end
-
-            puts ban
 
         rescue SQLite3::Exception => e
             puts "Ecepsion"
             puts e
         
         end
+        #===================================================================
+        begin 
+            db =SQLite3::Database.open 'ProyRuby.db'
+            query= db.prepare "SELECT Nombre_maestro from MateriasFK 
+            where Nombre_materia= '#{m2}';"
+            data= query.execute
+
+            for linea in data
+                print "linea2", linea
+                nombre_maestro= linea[0]
+                puts nombre_maestro
+
+                if nombre_maestro != nil
+                    materia2_estado="ocupada"
+                end 
+            end
+
+        rescue SQLite3::Exception => e
+            puts "Ecepsion"
+            puts e
+        
+        end
+        #=====================================================================
+        begin 
+            db =SQLite3::Database.open 'ProyRuby.db'
+            query= db.prepare "SELECT Nombre_maestro from MateriasFK 
+            where Nombre_materia= '#{m3}';"
+            data= query.execute
+
+            for linea in data
+                print "linea3", linea
+                nombre_maestro= linea[0]
+                puts nombre_maestro
+
+                if nombre_maestro != nil
+                    materia3_estado="ocupada"
+                end 
+            end
+
+        rescue SQLite3::Exception => e
+            puts "Ecepsion"
+            puts e
+        
+        end
+        #===================================================================
+        #COMPRUEBO QUE TODOS LOS CAMPOS ESTEN LLENOS 3 MATERIAS Y EL NOMBRE DEL DOCENTE
+        print "Info", materia1_estado, materia2_estado, materia3_estado, nombre_teacher
+        if materia1_estado == "libre" && materia2_estado =="libre"  && materia3_estado=="libre" && (nombre_teacher != nil && nombre_teacher != "")
+            begin 
+                db =SQLite3::Database.open 'ProyRuby.db'
+                query= db.prepare "INSERT INTO Maestros values('#{nombre_teacher}', '#{m1}', '#{m2}', '#{m3}');"
+                data= query.execute
+    
+            rescue SQLite3::Exception => e
+                puts "Ecepsion"
+                puts e
+            
+            end
+
+            #inserto en la tabla de materias el nombre del teacher q la imparte
+            #=================================================================
+            begin 
+                db =SQLite3::Database.open 'ProyRuby.db'
+                query= db.prepare "UPDATE MateriasFK 
+                    SET Nombre_materia = '#{m1}', 
+                    Nombre_maestro = '#{nombre_teacher}'
+                WHERE
+                    Nombre_materia = '#{m1}'"
+                data= query.execute
+    
+            rescue SQLite3::Exception => e
+                puts "Ecepsion"
+                puts e
+            
+            end
+            #====================================================================
+            begin 
+                db =SQLite3::Database.open 'ProyRuby.db'
+                query= db.prepare "UPDATE MateriasFK 
+                    SET Nombre_materia = '#{m2}', 
+                    Nombre_maestro = '#{nombre_teacher}'
+                WHERE
+                    Nombre_materia = '#{m2}'"
+                data= query.execute
+    
+            rescue SQLite3::Exception => e
+                puts "Ecepsion"
+                puts e
+            
+            end
+            #============================================================================
+            begin 
+                db =SQLite3::Database.open 'ProyRuby.db'
+                query= db.prepare "UPDATE MateriasFK 
+                    SET Nombre_materia = '#{m3}', 
+                    Nombre_maestro = '#{nombre_teacher}'
+                WHERE
+                    Nombre_materia = '#{m3}'"
+                data= query.execute
+    
+            rescue SQLite3::Exception => e
+                puts "Ecepsion"
+                puts e
+            
+            end
+
+        else
+            puts "NO SE PUEDE REGISTRAR DOCENTE"
+        end
+
     end
     
     def on_close
-        
-
           getApp().exit(0)
     end
 
