@@ -14,7 +14,7 @@ class Ventana < FXMainWindow
         super(app, "Maestros", :width=>400, :height=>300)
         hFrame1 = FXHorizontalFrame.new(self)
         chrLabel = FXLabel.new(hFrame1, "Nombre:")
-        chrTextField1 = FXTextField.new(hFrame1, 30)
+        nombre = FXTextField.new(hFrame1, 30)
 
         
         hFrame2 = FXHorizontalFrame.new(self)
@@ -22,19 +22,43 @@ class Ventana < FXMainWindow
         mat1= FXComboBox.new(hFrame2, 15)
         mat2= FXComboBox.new(hFrame2, 15)
         mat3= FXComboBox.new(hFrame2, 15)
+        
+        db =SQLite3::Database.open 'ProyRuby.db'
+        query= db.prepare "select * from Materias"
+        data= query.execute
+
+        begin
+
+            for materia  in data
+                var= materia[0]
+                mat1.appendItem( var)
+                mat2.appendItem( var)
+                mat3.appendItem( var)
+            end
+
+        rescue SQLite3::Exception => e
+            puts "Ecepsion"
+            puts e
+        ensure 
+            query.close if query
+            db.close if db
+        end
+
+        
+        
 
         
         
         hFrame3 = FXHorizontalFrame.new(self)
         b1 = FXButton.new(hFrame3, "Registrar nuevo maestro")
         b1.connect(SEL_COMMAND) do
-            #registrar_nuevo_maestro(chrTextField1.text, mat1, mat2, mat3)
+            registrar_nuevo_maestro(nombre.text, mat1.text, mat2.text, mat3.text)
         end
         
        
         b2= FXButton.new(hFrame3, "Cancelar")
         b2.connect(SEL_COMMAND) do
-            #on_close()
+            on_close()
         end
 
         b3= FXButton.new(hFrame3, "Modificar") #debe de poner nombr emaestro
@@ -72,11 +96,13 @@ class Ventana < FXMainWindow
     def registrar_nuevo_maestro(nombre_obtenido,m1, m2, m3)
         begin 
             db =SQLite3::Database.open 'ProyRuby.db'
-            query= db.prepare "SELECT Nombre, contra  FROM Logins"
+            query= db.prepare "SELECT * from Materias"
             data= query.execute
 
             for linea in data
-                nombrecito= linea[0]
+                nombre_materia= linea[0]
+                nombre_maestro= linea[0]
+
                 if nombre_obtenido == nombrecito
                     ban="Ya hay un usuario con el mismo nombre. "
 
@@ -84,7 +110,7 @@ class Ventana < FXMainWindow
                 else
 
                     begin 
-                        query= db.prepare "INSERT INTO Logins values('#{nombre_obtenido}', '#{contraseña}')"
+                        #query= db.prepare "INSERT INTO Logins values('#{nombre_obtenido}', '#{contraseña}')"
                         data= query.execute
 
                     rescue SQLite3::Exception => e
@@ -107,6 +133,8 @@ class Ventana < FXMainWindow
     end
     
     def on_close
+        
+
           getApp().exit(0)
     end
 
