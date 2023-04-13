@@ -101,7 +101,7 @@ class Ventana < FXMainWindow
 
             for linea in data
                 nombre_materia= linea[0]
-                nombre_maestro= linea[0]
+                nombre_maestro= linea[1]
 
                 if nombre_obtenido == nombrecito
                     ban="Ya hay un usuario con el mismo nombre. "
