@@ -7,40 +7,44 @@ ActiveRecord::Base.establish_connection(
 )
 
 require 'fox16'  
-
 include Fox 
 
 class Ventana < FXMainWindow
     def initialize(app)
-        super(app, "Log in", :width=>300, :height=>300)
+        super(app, "Maestros", :width=>400, :height=>300)
         hFrame1 = FXHorizontalFrame.new(self)
         chrLabel = FXLabel.new(hFrame1, "Nombre:")
-        chrTextField1 = FXTextField.new(hFrame1, 15)
+        chrTextField1 = FXTextField.new(hFrame1, 30)
+
         
         hFrame2 = FXHorizontalFrame.new(self)
-        chrLabel = FXLabel.new(hFrame2, "Contraseña:")
-        chrTextField2 = FXTextField.new(hFrame2, 10)
 
+        mat1= FXComboBox.new(hFrame2, 15)
+        mat2= FXComboBox.new(hFrame2, 15)
+        mat3= FXComboBox.new(hFrame2, 15)
+
+        
+        
         hFrame3 = FXHorizontalFrame.new(self)
-        b1 = FXButton.new(hFrame3, "Entrar")
+        b1 = FXButton.new(hFrame3, "Registrar nuevo maestro")
         b1.connect(SEL_COMMAND) do
-            Entrar(chrTextField1.text, chrTextField2.text)
+            #registrar_nuevo_maestro(chrTextField1.text, mat1, mat2, mat3)
         end
         
-
+       
         b2= FXButton.new(hFrame3, "Cancelar")
         b2.connect(SEL_COMMAND) do
-            on_close()
-          end
+            #on_close()
+        end
 
-        b3= FXButton.new(hFrame3, "Registrar")
+        b3= FXButton.new(hFrame3, "Modificar") #debe de poner nombr emaestro
         b3.connect(SEL_COMMAND) do
-            Nuevo_user(chrTextField1.text, chrTextField2.text)
+            #modificar()
         end
     end
 
 
-    def Entrar(nombre_obtenido, contraseña)
+    def modificar
         begin 
             db =SQLite3::Database.open 'ProyRuby.db'
             query= db.prepare "SELECT Nombre, contra  FROM Logins"
@@ -65,7 +69,7 @@ class Ventana < FXMainWindow
         end
     end
 
-    def Nuevo_user(nombre_obtenido, contraseña)
+    def registrar_nuevo_maestro(nombre_obtenido,m1, m2, m3)
         begin 
             db =SQLite3::Database.open 'ProyRuby.db'
             query= db.prepare "SELECT Nombre, contra  FROM Logins"
