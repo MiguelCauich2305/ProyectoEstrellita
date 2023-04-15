@@ -150,7 +150,10 @@ class Ventana < FXMainWindow
                 puts "antes de la incersion", numeroControl,nombre,direccion,edad
                 begin
                     db = SQLite3::Database.open 'ProyRuby.db'
-                    db.execute "INSERT INTO Alumnos VALUES('#{numeroControl}', '#{nombre}', '#{direccion}', '#{edad}', '#{materia1}','#{materia2}','#{materia3}' )"
+                    db.execute "INSERT INTO Alumnos VALUES('#{numeroControl}', '#{nombre}', '#{direccion}', '#{edad}', '#{materia1}','#{materia2}','#{materia3}' );"
+                    db.execute "INSERT INTO Calificaciones VALUES('#{numeroControl}', '#{materia1}','0','0','0');"
+                    db.execute "INSERT INTO Calificaciones VALUES('#{numeroControl}', '#{materia2}','0','0','0');"
+                    db.execute "INSERT INTO Calificaciones VALUES('#{numeroControl}', '#{materia3}','0','0','0');"
                     db.close
                     FXMessageBox.information(app,MBOX_OK, "Exito!", "Datos guardados!")
                     textoNoControl.text = ""
@@ -244,7 +247,9 @@ class Ventana < FXMainWindow
                 begin
                     db = SQLite3::Database.open 'ProyRuby.db'
                     resultados = db.execute "UPDATE Alumnos SET NoControl = '#{numeroControl}', Nombre = '#{nombre}', Direccion = '#{direccion}', Edad = '#{edad}', M1 = '#{materia1Enviar}', M2 = '#{materia2Enviar}', M3 = '#{materia3Enviar}'  WHERE NoControl = '#{numeroControl}';"
-                    #db.execute "INSERT INTO Alumnos VALUES('Z', 'M', 'M', '22')"
+                    db.execute "UPDATE Calificaciones SET Nombre_materia = '#{materia1Enviar}' WHERE (Nombre_materia = '#{materia1}') AND (NoControl = '#{numeroControl})');"
+                    db.execute "UPDATE Calificaciones SET Nombre_materia = '#{materia2Enviar}' WHERE (Nombre_materia = '#{materia2}') AND (NoControl = '#{numeroControl})');"
+                    db.execute "UPDATE Calificaciones SET Nombre_materia = '#{materia2Enviar}' WHERE (Nombre_materia = '#{materia3}') AND (NoControl = '#{numeroControl})');"
                     db.close
                     FXMessageBox.information(app,MBOX_OK, "Exito!", "Datos actualizados!")
                     textoNoControl.text = ""
@@ -279,7 +284,7 @@ class Ventana < FXMainWindow
                 begin
                     db = SQLite3::Database.open 'ProyRuby.db'
                     resultados = db.execute "DELETE from Alumnos WHERE NoControl = '#{numeroControl}';"
-                    #db.execute "INSERT INTO Alumnos VALUES('Z', 'M', 'M', '22')"
+                    db.execute "DELETE from Calificaciones WHERE NoControl = '#{numeroControl}';"
                     db.close
                     FXMessageBox.information(app,MBOX_OK, "Exito!", "Datos eliminados!")
                     textoNoControl.text = ""
