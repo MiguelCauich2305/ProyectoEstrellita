@@ -46,7 +46,7 @@ class Ventana < FXMainWindow
         labelEdad = FXLabel.new(groupbox, "Edad", :opts =>LAYOUT_EXPLICIT, :width=>110, :height=>50, :x=>25, :y=>145)
         labelEdad.font = FXFont.new(app, "Arial", 14)
         frameEdad = FXHorizontalFrame.new(groupbox, :opts => LAYOUT_EXPLICIT, :width=>260, :height=>35, :x=>145, :y=>150)
-        textoEdad = FXText.new(frameEdad, :opts => TEXT_OVERSTRIKE|LAYOUT_FILL)
+        textoEdad = FXText.new(frameEdad, :opts => TEXT_WORDWRAP|LAYOUT_FILL)
         textoEdad.font = FXFont.new(app, "Arial", 14)
 
         ##################################### ENCERRONA 2 XD (materias) ####################################################################
@@ -128,7 +128,6 @@ class Ventana < FXMainWindow
         ######################################### Botones ###############################################################################
         
         ##################################### ENCERRONA 3 XD (botones) ##################################################################
-        
         groupbox3 = FXGroupBox.new(hframe, "Acciones",:opts => GROUPBOX_NORMAL|FRAME_GROOVE|LAYOUT_FILL_X|LAYOUT_FILL_Y)
         frameBotones = FXHorizontalFrame.new(groupbox3, :opts => LAYOUT_FILL)
         ######################################### Numero de control #####################################################################
@@ -218,9 +217,12 @@ class Ventana < FXMainWindow
             materia1 = comboM1.text
             materia2 = comboM2.text
             materia3 = comboM3.text
-            materia1Guardada = textoM1
-            materia2Guardada = textoM2
-            materia3Guardada = textoM3
+            materia1Guardada = textoM1.text
+            materia2Guardada = textoM2.text
+            materia3Guardada = textoM3.text
+
+            puts "Materias Guardadas: ",materia1Guardada, materia2Guardada, materia3Guardada
+            puts " "
             materia1Enviar = ""
             materia2Enviar = ""
             materia3Enviar = ""
@@ -246,10 +248,10 @@ class Ventana < FXMainWindow
                 puts "antes de la Modificacion", numeroControl
                 begin
                     db = SQLite3::Database.open 'ProyRuby.db'
+                    r1 = db.execute "UPDATE Calificaciones SET Nombre_materia = '#{materia1Enviar}' WHERE (Nombre_materia = '#{materia1Guardada}') AND (NoControl = '#{numeroControl}');"
+                    r2 = db.execute "UPDATE Calificaciones SET Nombre_materia = '#{materia2Enviar}' WHERE (Nombre_materia = '#{materia2Guardada}') AND (NoControl = '#{numeroControl}');"
+                    r3 = db.execute "UPDATE Calificaciones SET Nombre_materia = '#{materia3Enviar}' WHERE (Nombre_materia = '#{materia3Guardada}') AND (NoControl = '#{numeroControl}');"
                     resultados = db.execute "UPDATE Alumnos SET NoControl = '#{numeroControl}', Nombre = '#{nombre}', Direccion = '#{direccion}', Edad = '#{edad}', M1 = '#{materia1Enviar}', M2 = '#{materia2Enviar}', M3 = '#{materia3Enviar}'  WHERE NoControl = '#{numeroControl}';"
-                    db.execute "UPDATE Calificaciones SET Nombre_materia = '#{materia1Enviar}' WHERE (Nombre_materia = '#{materia1}') AND (NoControl = '#{numeroControl})');"
-                    db.execute "UPDATE Calificaciones SET Nombre_materia = '#{materia2Enviar}' WHERE (Nombre_materia = '#{materia2}') AND (NoControl = '#{numeroControl})');"
-                    db.execute "UPDATE Calificaciones SET Nombre_materia = '#{materia2Enviar}' WHERE (Nombre_materia = '#{materia3}') AND (NoControl = '#{numeroControl})');"
                     db.close
                     FXMessageBox.information(app,MBOX_OK, "Exito!", "Datos actualizados!")
                     textoNoControl.text = ""
@@ -283,8 +285,8 @@ class Ventana < FXMainWindow
                 puts "antes de la Eliminacion", numeroControl
                 begin
                     db = SQLite3::Database.open 'ProyRuby.db'
-                    resultados = db.execute "DELETE from Alumnos WHERE NoControl = '#{numeroControl}';"
                     db.execute "DELETE from Calificaciones WHERE NoControl = '#{numeroControl}';"
+                    resultados = db.execute "DELETE from Alumnos WHERE NoControl = '#{numeroControl}';"
                     db.close
                     FXMessageBox.information(app,MBOX_OK, "Exito!", "Datos eliminados!")
                     textoNoControl.text = ""
