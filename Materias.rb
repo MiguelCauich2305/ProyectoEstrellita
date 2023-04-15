@@ -15,7 +15,8 @@ class Ventana < FXMainWindow
 =end
 
     def initialize(app)
-        super(app, "Materias", :width=>1000, :height=>300)
+        @contador = 0
+        super(app, "Materias", :width=>1200, :height=>350)
         packer = FXPacker.new(self, :opts => LAYOUT_FILL)
         hframe = FXHorizontalFrame.new(packer,:opts => LAYOUT_SIDE_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y)
             
@@ -99,7 +100,7 @@ class Ventana < FXMainWindow
         ##################################### Acciones Encerrona 1 ##################################################################  
         frameBotones1 = FXHorizontalFrame.new(groupbox, :opts => LAYOUT_FILL)
 
-        botonBuscar1 = FXButton.new(frameBotones1,"Buscar", 
+        botonBuscar1 = FXButton.new(frameBotones1,"Buscar alumno", 
                                     :opts =>LAYOUT_EXPLICIT|BUTTON_NORMAL|LAYOUT_CENTER_X, 
                                     :width=>80, :height=>30,:x=>420, :y=>10)
         botonBuscar1.connect(SEL_COMMAND) do |sender, sel, data|
@@ -155,10 +156,10 @@ class Ventana < FXMainWindow
             end
         end
 
-        botonGuardar2 = FXButton.new(frameBotones1,"Guardar Calificaciones", 
+        botonGuardar1 = FXButton.new(frameBotones1,"Guardar Calificaciones", 
                                     :opts =>LAYOUT_EXPLICIT|BUTTON_NORMAL|LAYOUT_CENTER_Y, 
                                     :width=>130, :height=>30,:x=>380, :y=>200)
-        botonGuardar2.connect(SEL_COMMAND) do|sender, sel, data|
+        botonGuardar1.connect(SEL_COMMAND) do|sender, sel, data|
             numeroControl = textoNoControl
             materia1 = textoM1.text
             materia2 = textoM2.text
@@ -183,17 +184,17 @@ class Ventana < FXMainWindow
                 puts "antes de la incersion", numeroControl
                 begin
                     db = SQLite3::Database.open 'ProyRuby.db'
-                    db.execute "UPDATE Calificaciones SET U1 = '#{m1C1}' WHERE (Nombre_materia = '#{materia1}') AND (NoControl = '#{numeroControl})');"
-                    db.execute "UPDATE Calificaciones SET U2 = '#{m1C2}' WHERE (Nombre_materia = '#{materia1}') AND (NoControl = '#{numeroControl})');"
-                    db.execute "UPDATE Calificaciones SET U3 = '#{m1C3}' WHERE (Nombre_materia = '#{materia1}') AND (NoControl = '#{numeroControl})');"
+                    db.execute "UPDATE Calificaciones SET U1 = '#{m1C1}' WHERE (Nombre_materia = '#{materia1}') AND (NoControl = '#{numeroControl}');"
+                    db.execute "UPDATE Calificaciones SET U2 = '#{m1C2}' WHERE (Nombre_materia = '#{materia1}') AND (NoControl = '#{numeroControl}');"
+                    db.execute "UPDATE Calificaciones SET U3 = '#{m1C3}' WHERE (Nombre_materia = '#{materia1}') AND (NoControl = '#{numeroControl}');"
 
-                    db.execute "UPDATE Calificaciones SET U1 = '#{m2C1}' WHERE (Nombre_materia = '#{materia2}') AND (NoControl = '#{numeroControl})');"
-                    db.execute "UPDATE Calificaciones SET U2 = '#{m2C2}' WHERE (Nombre_materia = '#{materia2}') AND (NoControl = '#{numeroControl})');"
-                    db.execute "UPDATE Calificaciones SET U3 = '#{m2C3}' WHERE (Nombre_materia = '#{materia2}') AND (NoControl = '#{numeroControl})');"
+                    db.execute "UPDATE Calificaciones SET U1 = '#{m2C1}' WHERE (Nombre_materia = '#{materia2}') AND (NoControl = '#{numeroControl}');"
+                    db.execute "UPDATE Calificaciones SET U2 = '#{m2C2}' WHERE (Nombre_materia = '#{materia2}') AND (NoControl = '#{numeroControl}');"
+                    db.execute "UPDATE Calificaciones SET U3 = '#{m2C3}' WHERE (Nombre_materia = '#{materia2}') AND (NoControl = '#{numeroControl}');"
 
-                    db.execute "UPDATE Calificaciones SET U1 = '#{m3C1}' WHERE (Nombre_materia = '#{materia3}') AND (NoControl = '#{numeroControl})');"
-                    db.execute "UPDATE Calificaciones SET U2 = '#{m3C2}' WHERE (Nombre_materia = '#{materia3}') AND (NoControl = '#{numeroControl})');"
-                    db.execute "UPDATE Calificaciones SET U3 = '#{m3C3}' WHERE (Nombre_materia = '#{materia3}') AND (NoControl = '#{numeroControl})');"
+                    db.execute "UPDATE Calificaciones SET U1 = '#{m3C1}' WHERE (Nombre_materia = '#{materia3}') AND (NoControl = '#{numeroControl}');"
+                    db.execute "UPDATE Calificaciones SET U2 = '#{m3C2}' WHERE (Nombre_materia = '#{materia3}') AND (NoControl = '#{numeroControl}');"
+                    db.execute "UPDATE Calificaciones SET U3 = '#{m3C3}' WHERE (Nombre_materia = '#{materia3}') AND (NoControl = '#{numeroControl}');"
                     db.close
                     FXMessageBox.information(app,MBOX_OK, "Exito!", "Datos guardados!")
                     textoNoControl.text = ""
@@ -222,8 +223,103 @@ class Ventana < FXMainWindow
         ##################################### ENCERRONA 2 XD (materias) ####################################################################
         groupbox2 = FXGroupBox.new(hframe, "Materias",:opts => GROUPBOX_NORMAL|FRAME_GROOVE|LAYOUT_FILL_X|LAYOUT_FILL_Y)
 
+        frameCombo1 = FXHorizontalFrame.new(groupbox2, :opts => LAYOUT_EXPLICIT, :width => 200, :height => 60, :x=>10, :y=>20)
+        comboM1 = FXComboBox.new(frameCombo1, 20,:opts => COMBOBOX_STATIC|FRAME_SUNKEN|FRAME_THICK|LAYOUT_FILL_X) 
+        comboM1.numVisible = 6
+        comboM1.font = FXFont.new(app, "Arial", 12)
+
+        begin
+            db = SQLite3::Database.open 'ProyRuby.db'
+            resultados = db.execute "SELECT * from MateriasFK"
+            db.close
+            resultados.each do |row|
+                #puts row.join "\s"
+                comboM1.appendItem(row[0])
+            end 
+        rescue SQLite3::Exception => e 
+            puts "Exception occurred"
+            puts e
+            FXMessageBox.error(app,MBOX_OK, "Error", "No se pudo encontrar Materias")
+        ensure
+            db.close if db
+        end
+
+        frameTabla = FXHorizontalFrame.new(groupbox2, :opts => LAYOUT_EXPLICIT, :width => 400, :height => 200, :x=>10, :y=>70)
+        tablaCalificaciones = FXTable.new(frameTabla, :opts => LAYOUT_FILL)
+        tablaCalificaciones.setTableSize(10, 3)
+
+        tablaCalificaciones.setColumnText(0, "No control")
+        tablaCalificaciones.setColumnText(1, "Alumno")
+        tablaCalificaciones.setColumnText(2, "Promedio")
+
+        tablaCalificaciones.rowHeaderMode = LAYOUT_FIX_WIDTH
+        tablaCalificaciones.rowHeaderWidth = 0
+        tablaCalificaciones.columnHeaderMode = LAYOUT_FIX_HEIGHT
+        tablaCalificaciones.columnHeader.setItemJustify(0, FXHeaderItem::CENTER_X)
+        tablaCalificaciones.columnHeader.setItemJustify(1, FXHeaderItem::CENTER_X)
+        tablaCalificaciones.columnHeader.setItemJustify(2, FXHeaderItem::CENTER_X)
+
+        #tablaCalificaciones.setItemText(0, 0, "An item")
+        #tablaCalificaciones.setItemText(0, 1, "Another item")
+
+        frameBotones2 = FXHorizontalFrame.new(groupbox2, :opts => LAYOUT_FILL)
+
+        botonBuscar2 = FXButton.new(frameBotones2,"Buscar Alumnos", 
+                                    :opts =>LAYOUT_EXPLICIT|BUTTON_NORMAL|LAYOUT_CENTER_X, 
+                                    :width=>130, :height=>30,:x=>420, :y=>10)
+        botonBuscar2.connect(SEL_COMMAND) do |sender, sel, data|
+            materiaLista = comboM1.text
+            if (materiaLista.nil? == true)
+                FXMessageBox.error(app,MBOX_OK, "Llena el campo", "Se necesita del campo Numero de control lleno")
+            else
+                for i in (0..9)
+                    tablaCalificaciones.setItemText(i, 0, "")
+                    tablaCalificaciones.setItemText(i, 1, "")
+                    tablaCalificaciones.setItemText(i, 2, "")
+                end
+                begin
+                    db = SQLite3::Database.open 'ProyRuby.db'
+                    #resultados = db.execute "SELECT * from Alumnos WHERE NoControl = '#{numeroControl}';"
+                    resultados2 = db.execute "SELECT * from Calificaciones WHERE Nombre_materia = '#{materiaLista}';"
+                    db.close
+                    @contador = 0
+                    resultados2.each do |row|
+                        tablaCalificaciones.setItemText(@contador, 0, "#{row[0]}")
+
+                        db = SQLite3::Database.open 'ProyRuby.db'
+                        resultados = db.execute "SELECT * from Alumnos WHERE NoControl = '#{row[0]}';"
+                        db.close
+                        resultados.each do |row2|
+                            #alumnoNombre=
+                            tablaCalificaciones.setItemText(@contador, 1,"#{row2[1]}")
+                            #puts "Nombre del alumno: ",alumnoNombre
+                        end
+                        calif1 = row[2]
+                        calif2 = row[3]
+                        calif3 = row[4]
+                        promedio = (calif1 + calif2 + calif3)/3
+                        tablaCalificaciones.setItemText(@contador, 2, "#{promedio}")
+                        #textoM1C1.text = "#{row[2]}"
+                        #textoM1C2.text = "#{row[3]}"
+                        #textoM1C3.text = "#{row[4]}"
+                        @contador = @contador + 1
+                    end
+
+                    FXMessageBox.information(app,MBOX_OK, "Exito!", "Busqueda realizada!")
+                    
+                rescue SQLite3::Exception => e 
+                    puts "Exception occurred"
+                    puts e
+                    FXMessageBox.error(app,MBOX_OK, "Error", "No se pudo realizar la busqueda")
+                ensure
+                    db.close if db
+                end
+            end
+        end
+
+
         ##################################### ENCERRONA 3 XD (botones) ##################################################################
-        groupbox3 = FXGroupBox.new(hframe, "Acciones",:opts => GROUPBOX_NORMAL|FRAME_GROOVE|LAYOUT_FILL_X|LAYOUT_FILL_Y)
+        #groupbox3 = FXGroupBox.new(hframe, "Acciones",:opts => GROUPBOX_NORMAL|FRAME_GROOVE|LAYOUT_FILL_X|LAYOUT_FILL_Y)
         
     end
     def create
