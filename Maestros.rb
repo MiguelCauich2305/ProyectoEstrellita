@@ -9,7 +9,7 @@ ActiveRecord::Base.establish_connection(
 require 'fox16'  
 include Fox 
 
-class Ventana < FXMainWindow
+class Maestros < FXMainWindow
     def initialize(app)
         super(app, "Maestros", :width=>400, :height=>300)
         hFrame1 = FXHorizontalFrame.new(self)
@@ -163,8 +163,6 @@ class Ventana < FXMainWindow
                 if resupesta == 1 #si
                     funcion_modificar(nombre_teacher, m1, m2, m3)
 
-
-                    
                 end
 
             end
@@ -410,8 +408,3 @@ class Ventana < FXMainWindow
 
 end
 
-app = FXApp.new
-Ventana.new(app)
-
-app.create
-app.run
