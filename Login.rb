@@ -46,7 +46,6 @@ class Ventana < FXMainWindow
 
     def entrar(nombre_obtenido, contraseña)
         ban=FALSE
-        puts "hola"
         begin 
             db =SQLite3::Database.open 'ProyRuby.db'
             query= db.prepare "SELECT Nombre, contra  FROM Logins"
@@ -74,11 +73,9 @@ class Ventana < FXMainWindow
 
 
         if ban == FALSE
-                print "es falso"
                 FXMessageBox.error(app, MBOX_OK, 'Error', 'No hay coincidencias.')
 
         elsif ban == TRUE
-            print "es falsoUU"
 
             begin 
                 db =SQLite3::Database.open 'ProyRuby.db'
@@ -98,10 +95,14 @@ class Ventana < FXMainWindow
             end
 
             if tipo_usuario== 'alumno'
+                puts "Vista alumno"
+
                 vista_alumnos()
 
 
             elsif tipo_usuario == 'maestro'
+                puts "Vista maestro"
+
                 
                 menu()
             end
@@ -121,12 +122,6 @@ class Ventana < FXMainWindow
         super
         show(PLACEMENT_SCREEN)
     end 
-
-    def registrar_maestro
-        ventana=Maestros.new(@app)
-        ventana.create
-        ventana.show(PLACEMENT_SCREEN)
-    end
 
     def vista_alumnos
         ventana=Materias_alumnos.new(@app)
