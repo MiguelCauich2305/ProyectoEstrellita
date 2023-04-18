@@ -6,7 +6,7 @@ include(Fox)
 #db = SQLite3::Database.open 'ProyRuby.db'
 #db.execute "INSERT INTO Alumnos VALUES(1,'Audi',52642)"
 #db.close
-class Materias < FXMainWindow
+class Materias_alumnos < FXMainWindow
 =begin
     @inicial = 10 
     @separacionAltura = 40

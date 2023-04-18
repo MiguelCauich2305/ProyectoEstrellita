@@ -9,6 +9,7 @@ ActiveRecord::Base.establish_connection(
 require 'fox16'  
 require_relative 'Menu'
 require_relative 'Registrar'
+require_relative 'MateriasVistaAlumnos'
 
 include Fox 
 
@@ -27,7 +28,7 @@ class Ventana < FXMainWindow
         hFrame3 = FXHorizontalFrame.new(self)
         b1 = FXButton.new(hFrame3, "Entrar")
         b1.connect(SEL_COMMAND) do
-            Entrar(chrTextField1.text, chrTextField2.text)
+            entrar(chrTextField1.text, chrTextField2.text)
         end
         
 
@@ -36,8 +37,6 @@ class Ventana < FXMainWindow
             on_close()
           end
 
-
-
         b4= FXButton.new(hFrame3, "Nuevo alumno")
         b4.connect(SEL_COMMAND) do
             registrar_alumno()
@@ -45,7 +44,9 @@ class Ventana < FXMainWindow
     end
 
 
-    def Entrar(nombre_obtenido, contraseña)
+    def entrar(nombre_obtenido, contraseña)
+        ban=FALSE
+        puts "hola"
         begin 
             db =SQLite3::Database.open 'ProyRuby.db'
             query= db.prepare "SELECT Nombre, contra  FROM Logins"
@@ -71,10 +72,14 @@ class Ventana < FXMainWindow
         end
 
 
+
         if ban == FALSE
+                print "es falso"
                 FXMessageBox.error(app, MBOX_OK, 'Error', 'No hay coincidencias.')
 
         elsif ban == TRUE
+            print "es falsoUU"
+
             begin 
                 db =SQLite3::Database.open 'ProyRuby.db'
                 query= db.prepare "SELECT tipo  FROM Logins where Nombre='#{nombre_obtenido}' ";
@@ -93,6 +98,8 @@ class Ventana < FXMainWindow
             end
 
             if tipo_usuario== 'alumno'
+                vista_alumnos()
+
 
             elsif tipo_usuario == 'maestro'
                 
@@ -121,8 +128,8 @@ class Ventana < FXMainWindow
         ventana.show(PLACEMENT_SCREEN)
     end
 
-    def registrar_alumno
-        ventana=Registrar.new(@app)
+    def vista_alumnos
+        ventana=Materias_alumnos.new(@app)
         ventana.create
         ventana.show(PLACEMENT_SCREEN)
     end
