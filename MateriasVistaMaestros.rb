@@ -363,8 +363,5 @@ class Ventana < FXMainWindow
         
 end
 
-app = FXApp.new
-Ventana.new(app)
-app.create
-app.run
+
 

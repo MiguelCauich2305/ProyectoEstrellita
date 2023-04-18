@@ -9,8 +9,10 @@ require 'fox16'
 include Fox 
 
 require_relative 'Maestros'
+require_relative 'MateriasVistaMaestros'
+require_relative 'Alumnos'
 
-class Ventana < FXMainWindow
+class Menu < FXMainWindow
     def initialize(app)
         @app=app
         print "ESTE ES EL MENU DEL "
@@ -24,17 +26,17 @@ class Ventana < FXMainWindow
 
         b2 = FXButton.new(hFrame3, "MATERIAS")
         b2.connect(SEL_COMMAND) do
-            subjects(nombre.text, mat1.text, mat2.text, mat3.text)
+            subjects()
         end
 
         b3 = FXButton.new(hFrame3, "ALUMNOS")
         b3.connect(SEL_COMMAND) do
-            students(nombre.text, mat1.text, mat2.text, mat3.text)
+            students()
         end
 
         b4 = FXButton.new(hFrame3, "CERRAR")
         b4.connect(SEL_COMMAND) do
-            close(nombre.text, mat1.text, mat2.text, mat3.text)
+            close()
         end
     end
 
@@ -45,13 +47,13 @@ class Ventana < FXMainWindow
     end
 
     def subjects
-        ventana=.new(@app)
+        ventana=Materias.new(@app)
         ventana.create
         ventana.show(PLACEMENT_SCREEN)
     end
 
     def students
-        ventana=.new(@app)
+        ventana=Alumnos.new(@app)
         ventana.create
         ventana.show(PLACEMENT_SCREEN)
     end
@@ -61,12 +63,10 @@ class Ventana < FXMainWindow
         show(PLACEMENT_SCREEN)
     end 
 
+    def on_close
+        getApp().exit(0)
+  end
 
 
 end 
 
-app = FXApp.new
-Ventana.new(app)
-
-app.create
-app.run
