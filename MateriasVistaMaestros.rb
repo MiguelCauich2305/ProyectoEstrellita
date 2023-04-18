@@ -261,8 +261,40 @@ class Ventana < FXMainWindow
 
         #tablaCalificaciones.setItemText(0, 0, "An item")
         #tablaCalificaciones.setItemText(0, 1, "Another item")
-
+        labelNuevaMateria = FXLabel.new(groupbox2,  "Nueva Materia", :opts =>LAYOUT_EXPLICIT, :width => 150, :height => 30,:x=>450, :y=>100)
+        labelNuevaMateria.font = FXFont.new(app, "Arial", 14)
+        frameMateriaNueva = FXHorizontalFrame.new(groupbox2, :opts => LAYOUT_EXPLICIT, :width => 150, :height => 35,:x=>450, :y=>130)
+        textoMateriaNueva = FXText.new(frameMateriaNueva, :opts => TEXT_WORDWRAP|LAYOUT_FILL)
+        textoMateriaNueva.font = FXFont.new(app, "Arial", 12)
         frameBotones2 = FXHorizontalFrame.new(groupbox2, :opts => LAYOUT_FILL)
+
+        botonGuardar3 = FXButton.new(frameBotones2,"Materia nueva", 
+                                    :opts =>LAYOUT_EXPLICIT|BUTTON_NORMAL|LAYOUT_CENTER_Y, 
+                                    :width=>130, :height=>30,:x=>450, :y=>150)
+        botonGuardar3.connect(SEL_COMMAND) do|sender, sel, data|
+            numeroControl = textoNoControl
+            materiaNueva = textoMateriaNueva.text
+
+            if (materiaNueva.nil? == true)
+                print materiaNueva,": Vacio"
+                FXMessageBox.error(app,MBOX_OK, "Llena los campos", "No puedes guardar informacion vacia")
+            else
+                puts "antes de la incersion", materiaNueva
+                begin
+                    db = SQLite3::Database.open 'ProyRuby.db'
+                    db.execute "INSERT INTO MateriasFK VALUES('#{materiaNueva}',NULL);"
+                    db.close
+                    FXMessageBox.information(app,MBOX_OK, "Exito!", "Datos guardados!")
+                    textoMateriaNueva.text = ""
+                rescue SQLite3::Exception => e 
+                    puts "Exception occurred"
+                    puts e
+                    FXMessageBox.error(app,MBOX_OK, "Error", "No se pudo guardar la materia nueva")
+                ensure
+                    db.close if db
+                end
+            end
+        end
 
         botonBuscar2 = FXButton.new(frameBotones2,"Buscar Alumnos", 
                                     :opts =>LAYOUT_EXPLICIT|BUTTON_NORMAL|LAYOUT_CENTER_X, 
@@ -316,6 +348,8 @@ class Ventana < FXMainWindow
                 end
             end
         end
+
+
 
 
         ##################################### ENCERRONA 3 XD (botones) ##################################################################
