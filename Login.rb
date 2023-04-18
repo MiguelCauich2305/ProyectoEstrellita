@@ -62,38 +62,6 @@ class Ventana < FXMainWindow
                 end
             end
 
-            if ban == FALSE
-                 FXMessageBox.error(app, MBOX_OK, 'Error', 'No hay coincidencias.')
-
-            elsif ban == TRUE
-                begin 
-                    db =SQLite3::Database.open 'ProyRuby.db'
-                    query= db.prepare "SELECT tipo  FROM Logins where Nombre='#{nombre_obtenido}' ";
-                    data= query.execute
-
-                    for linea in data
-                        tipo_usuario= linea[0]
-                    end
-
-                rescue SQLite3::Exception => e
-                    puts "Ecepsion"
-                    puts e
-                ensure 
-                    query.close if query
-                    db.close if db
-                end
-
-                if tipo_usuario== 'alumno'
-
-                elsif tipo_usuario == 'maestro'
-                    
-                    menu()
-                end
-
-
-      
-            end
-            
         rescue SQLite3::Exception => e
             puts "Ecepsion"
             puts e
@@ -101,7 +69,40 @@ class Ventana < FXMainWindow
             query.close if query
             db.close if db
         end
-    end
+
+
+        if ban == FALSE
+                FXMessageBox.error(app, MBOX_OK, 'Error', 'No hay coincidencias.')
+
+        elsif ban == TRUE
+            begin 
+                db =SQLite3::Database.open 'ProyRuby.db'
+                query= db.prepare "SELECT tipo  FROM Logins where Nombre='#{nombre_obtenido}' ";
+                data= query.execute
+
+                for linea in data
+                    tipo_usuario= linea[0]
+                end
+
+            rescue SQLite3::Exception => e
+                puts "Ecepsion"
+                puts e
+            ensure 
+                query.close if query
+                db.close if db
+            end
+
+            if tipo_usuario== 'alumno'
+
+            elsif tipo_usuario == 'maestro'
+                
+                menu()
+            end
+
+        end
+            
+        
+    end #ENTRAR
 
     
     

@@ -9,7 +9,7 @@ require 'fox16'
 include Fox 
 
 require_relative 'Maestros'
-require_relative 'Materias'
+require_relative 'MateriasVistaMaestros'
 require_relative 'Alumnos'
 
 class Menu < FXMainWindow
