@@ -322,6 +322,8 @@ class Maestros < FXMainWindow
                     db =SQLite3::Database.open 'ProyRuby.db'
                     query= db.prepare "INSERT INTO Maestros values('#{nombre_teacher}', '#{m1}', '#{m2}', '#{m3}');"
                     data= query.execute
+                    FXMessageBox.information(app, MBOX_OK, 'Exito', 'Maestro registrado correctamente.')
+
         
                 rescue SQLite3::Exception => e
                     puts "Maestro ya registrado"

@@ -47,7 +47,7 @@ class Menu < FXMainWindow
     end
 
     def subjects
-        ventana=Materias.new(@app)
+        ventana=Materias_maestros.new(@app)
         ventana.create
         ventana.show(PLACEMENT_SCREEN)
     end

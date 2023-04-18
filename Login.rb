@@ -79,11 +79,12 @@ class Ventana < FXMainWindow
 
             begin 
                 db =SQLite3::Database.open 'ProyRuby.db'
-                query= db.prepare "SELECT tipo  FROM Logins where Nombre='#{nombre_obtenido}' ";
+                query= db.prepare "SELECT Nombre, tipo  FROM Logins where Nombre='#{nombre_obtenido}' ";
                 data= query.execute
 
                 for linea in data
-                    tipo_usuario= linea[0]
+                    nocontrol= linea[0]
+                    tipo_usuario= linea[1]
                 end
 
             rescue SQLite3::Exception => e
@@ -97,7 +98,7 @@ class Ventana < FXMainWindow
             if tipo_usuario== 'alumno'
                 puts "Vista alumno"
 
-                vista_alumnos()
+                vista_alumnos(nocontrol)
 
 
             elsif tipo_usuario == 'maestro'
@@ -123,8 +124,8 @@ class Ventana < FXMainWindow
         show(PLACEMENT_SCREEN)
     end 
 
-    def vista_alumnos
-        ventana=Materias_alumnos.new(@app)
+    def vista_alumnos(noc)
+        ventana=Materias_alumnos.new(@app,noc )
         ventana.create
         ventana.show(PLACEMENT_SCREEN)
     end
@@ -133,6 +134,13 @@ class Ventana < FXMainWindow
         ventana=Menu.new(@app)
         ventana.create
         ventana.show(PLACEMENT_SCREEN)
+    end
+
+    def  registrar_alumno()
+        ventana=Registrar.new(@app)
+        ventana.create
+        ventana.show(PLACEMENT_SCREEN)
+
     end
 
 

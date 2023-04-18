@@ -14,8 +14,9 @@ class Materias_alumnos < FXMainWindow
     @diferencia = 15
 =end
 
-    def initialize(app)
-        numeroControl = 'Z19020127'
+    def initialize(app, numero)
+        numeroControl = numero
+        puts numeroControl
         @contador = 0
         super(app, "Materias", :width=>450, :height=>350)
         packer = FXPacker.new(self, :opts => LAYOUT_FILL)
