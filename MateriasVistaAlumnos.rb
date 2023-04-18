@@ -15,8 +15,9 @@ class Ventana < FXMainWindow
 =end
 
     def initialize(app)
+        numeroControl = 'Z19020127'
         @contador = 0
-        super(app, "Materias", :width=>1200, :height=>350)
+        super(app, "Materias", :width=>450, :height=>350)
         packer = FXPacker.new(self, :opts => LAYOUT_FILL)
         hframe = FXHorizontalFrame.new(packer,:opts => LAYOUT_SIDE_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y)
             
@@ -26,14 +27,14 @@ class Ventana < FXMainWindow
         labelNoControl = FXLabel.new(groupbox,  "No. control", :opts =>LAYOUT_EXPLICIT, :width=>110, :height=>50, :x=>25, :y=>25)
         labelNoControl.font = FXFont.new(app, "Arial", 14)
         frameControl = FXHorizontalFrame.new(groupbox, :opts => LAYOUT_EXPLICIT, :width => 260, :height => 35, :x=>145, :y=>30)
-        textoNoControl = FXText.new(frameControl, :opts => TEXT_WORDWRAP|LAYOUT_FILL)
+        textoNoControl = FXText.new(frameControl, :opts => TEXT_READONLY|LAYOUT_FILL)
         textoNoControl.font = FXFont.new(app, "Arial", 14)
 
         ######################################### Nombre ################################################################################
         labelNombre = FXLabel.new(groupbox, "Nombre", :opts =>LAYOUT_EXPLICIT, :width=>110, :height=>50, :x=>25, :y=>65)
         labelNombre.font = FXFont.new(app, "Arial", 14)
         frameNombre = FXHorizontalFrame.new(groupbox, :opts => LAYOUT_EXPLICIT, :width=>260, :height=>35, :x=>145, :y=>70)
-        textoNombre = FXText.new(frameNombre, :opts => COMBOBOX_STATIC|LAYOUT_FILL)
+        textoNombre = FXText.new(frameNombre, :opts => TEXT_READONLY|LAYOUT_FILL)
         textoNombre.font = FXFont.new(app, "Arial", 14)
 
         frameUnidades = FXHorizontalFrame.new(groupbox, :opts => LAYOUT_EXPLICIT, :width=>300, :height=>30,:x=>225, :y=>120) 
@@ -59,45 +60,46 @@ class Ventana < FXMainWindow
                 ##################################### Materia 1 ##################################################################
 
                 frameM1C1 = FXHorizontalFrame.new(groupbox, :opts => LAYOUT_EXPLICIT, :width => 50, :height => 30, :x=>220, :y=>150)
-                textoM1C1 = FXText.new(frameM1C1, :opts => TEXT_WORDWRAP|LAYOUT_FILL)
+                textoM1C1 = FXText.new(frameM1C1, :opts => TEXT_READONLY|LAYOUT_FILL)
                 textoM1C1.font = FXFont.new(app, "Arial", 10)
 
                 frameM1C2 = FXHorizontalFrame.new(groupbox, :opts => LAYOUT_EXPLICIT, :width => 50, :height => 30, :x=>270, :y=>150)
-                textoM1C2 = FXText.new(frameM1C2, :opts => TEXT_WORDWRAP|LAYOUT_FILL)
+                textoM1C2 = FXText.new(frameM1C2, :opts => TEXT_READONLY|LAYOUT_FILL)
                 textoM1C2.font = FXFont.new(app, "Arial", 10)
 
                 frameM1C3 = FXHorizontalFrame.new(groupbox, :opts => LAYOUT_EXPLICIT, :width => 50, :height => 30, :x=>320, :y=>150)
-                textoM1C3 = FXText.new(frameM1C3 , :opts => TEXT_WORDWRAP|LAYOUT_FILL)
+                textoM1C3 = FXText.new(frameM1C3 , :opts => TEXT_READONLY|LAYOUT_FILL)
                 textoM1C3.font = FXFont.new(app, "Arial", 10)
                 
                 ##################################### Materia 2 ##################################################################
                 frameM2C1 = FXHorizontalFrame.new(groupbox, :opts => LAYOUT_EXPLICIT, :width => 50, :height => 30, :x=>220, :y=>200)
-                textoM2C1 = FXText.new(frameM2C1, :opts => TEXT_WORDWRAP|LAYOUT_FILL)
+                textoM2C1 = FXText.new(frameM2C1, :opts => TEXT_READONLY|LAYOUT_FILL)
                 textoM2C1.font = FXFont.new(app, "Arial", 10)
 
                 frameM2C2 = FXHorizontalFrame.new(groupbox, :opts => LAYOUT_EXPLICIT, :width => 50, :height => 30, :x=>270, :y=>200)
-                textoM2C2 = FXText.new(frameM2C2, :opts => TEXT_WORDWRAP|LAYOUT_FILL)
+                textoM2C2 = FXText.new(frameM2C2, :opts => TEXT_READONLY|LAYOUT_FILL)
                 textoM2C2.font = FXFont.new(app, "Arial", 10)
 
                 frameM2C3 = FXHorizontalFrame.new(groupbox, :opts => LAYOUT_EXPLICIT, :width => 50, :height => 30, :x=>320, :y=>200)
-                textoM2C3 = FXText.new(frameM2C3 , :opts => TEXT_WORDWRAP|LAYOUT_FILL)
+                textoM2C3 = FXText.new(frameM2C3 , :opts => TEXT_READONLY|LAYOUT_FILL)
                 textoM2C3.font = FXFont.new(app, "Arial", 10)
 
                 ##################################### Materia 3 ##################################################################
                 frameM3C1 = FXHorizontalFrame.new(groupbox, :opts => LAYOUT_EXPLICIT, :width => 50, :height => 30, :x=>220, :y=>250)
-                textoM3C1 = FXText.new(frameM3C1, :opts => TEXT_WORDWRAP|LAYOUT_FILL)
+                textoM3C1 = FXText.new(frameM3C1, :opts => TEXT_READONLY|LAYOUT_FILL)
                 textoM3C1.font = FXFont.new(app, "Arial", 10)
 
                 frameM3C2 = FXHorizontalFrame.new(groupbox, :opts => LAYOUT_EXPLICIT, :width => 50, :height => 30, :x=>270, :y=>250)
-                textoM3C2 = FXText.new(frameM3C2, :opts => TEXT_WORDWRAP|LAYOUT_FILL)
+                textoM3C2 = FXText.new(frameM3C2, :opts => TEXT_READONLY|LAYOUT_FILL)
                 textoM3C2.font = FXFont.new(app, "Arial", 10)
         
                 frameM3C3 = FXHorizontalFrame.new(groupbox, :opts => LAYOUT_EXPLICIT, :width => 50, :height => 30, :x=>320, :y=>250)
-                textoM3C3 = FXText.new(frameM3C3 , :opts => TEXT_WORDWRAP|LAYOUT_FILL)
+                textoM3C3 = FXText.new(frameM3C3 , :opts => TEXT_READONLY|LAYOUT_FILL)
                 textoM3C3.font = FXFont.new(app, "Arial", 10)
 
 
         ##################################### Acciones Encerrona 1 ##################################################################  
+=begin
         frameBotones1 = FXHorizontalFrame.new(groupbox, :opts => LAYOUT_FILL)
 
         botonBuscar1 = FXButton.new(frameBotones1,"Buscar alumno", 
@@ -109,6 +111,7 @@ class Ventana < FXMainWindow
                 FXMessageBox.error(app,MBOX_OK, "Llena el campo", "Se necesita del campo Numero de control lleno")
             else
                 puts "antes de la Busqueda", numeroControl
+=end
                 begin
                     db = SQLite3::Database.open 'ProyRuby.db'
                     resultados = db.execute "SELECT * from Alumnos WHERE NoControl = '#{numeroControl}';"
@@ -144,15 +147,16 @@ class Ventana < FXMainWindow
                         end
                     end
 
-                    FXMessageBox.information(app,MBOX_OK, "Exito!", "Busqueda realizada!")
+                    #FXMessageBox.information(app,MBOX_OK, "Exito!", "Busqueda realizada!")
                     
                 rescue SQLite3::Exception => e 
                     puts "Exception occurred"
                     puts e
-                    FXMessageBox.error(app,MBOX_OK, "Error", "No se pudo realizar la busqueda")
+                    #FXMessageBox.error(app,MBOX_OK, "Error", "No se pudo realizar la busqueda")
                 ensure
                     db.close if db
                 end
+=begin
             end
         end
 
@@ -317,7 +321,7 @@ class Ventana < FXMainWindow
             end
         end
 
-
+=end
         ##################################### ENCERRONA 3 XD (botones) ##################################################################
         #groupbox3 = FXGroupBox.new(hframe, "Acciones",:opts => GROUPBOX_NORMAL|FRAME_GROOVE|LAYOUT_FILL_X|LAYOUT_FILL_Y)
         
