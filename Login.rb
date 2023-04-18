@@ -7,11 +7,14 @@ ActiveRecord::Base.establish_connection(
 )
 
 require 'fox16'  
+require_relative 'Menu'
+require_relative 'Registrar'
 
 include Fox 
 
 class Ventana < FXMainWindow
     def initialize(app)
+        @app=app
         super(app, "Log in", :width=>300, :height=>300)
         hFrame1 = FXHorizontalFrame.new(self)
         chrLabel = FXLabel.new(hFrame1, "Nombre:")
@@ -33,9 +36,11 @@ class Ventana < FXMainWindow
             on_close()
           end
 
-        b3= FXButton.new(hFrame3, "Registrar")
-        b3.connect(SEL_COMMAND) do
-            Nuevo_user(chrTextField1.text, chrTextField2.text)
+
+
+        b4= FXButton.new(hFrame3, "Nuevo alumno")
+        b4.connect(SEL_COMMAND) do
+            registrar_alumno()
         end
     end
 
@@ -51,11 +56,44 @@ class Ventana < FXMainWindow
             for linea in data
                 nombrecito= linea[0]
                 contrasena= linea[1]
+                tipo=linea[2]
                 if nombre_obtenido == nombrecito && contraseña==contrasena
                     ban=TRUE
                 end
             end
-            puts ban
+
+            if ban == FALSE
+                 FXMessageBox.error(app, MBOX_OK, 'Error', 'No hay coincidencias.')
+
+            elsif ban == TRUE
+                begin 
+                    db =SQLite3::Database.open 'ProyRuby.db'
+                    query= db.prepare "SELECT tipo  FROM Logins where Nombre='#{nombre_obtenido}' ";
+                    data= query.execute
+
+                    for linea in data
+                        tipo_usuario= linea[0]
+                    end
+
+                rescue SQLite3::Exception => e
+                    puts "Ecepsion"
+                    puts e
+                ensure 
+                    query.close if query
+                    db.close if db
+                end
+
+                if tipo_usuario== 'alumno'
+
+                elsif tipo_usuario == 'maestro'
+                    
+                    menu()
+                end
+
+
+      
+            end
+            
         rescue SQLite3::Exception => e
             puts "Ecepsion"
             puts e
@@ -65,42 +103,7 @@ class Ventana < FXMainWindow
         end
     end
 
-    def Nuevo_user(nombre_obtenido, contraseña)
-        begin 
-            db =SQLite3::Database.open 'ProyRuby.db'
-            query= db.prepare "SELECT Nombre, contra  FROM Logins"
-            data= query.execute
-
-            for linea in data
-                nombrecito= linea[0]
-                if nombre_obtenido == nombrecito
-                    ban="Ya hay un usuario con el mismo nombre. "
-
-                   
-                else
-
-                    begin 
-                        query= db.prepare "INSERT INTO Logins values('#{nombre_obtenido}', '#{contraseña}')"
-                        data= query.execute
-
-                    rescue SQLite3::Exception => e
-                        puts "Ecepsion"
-                        puts e
-                    
-
-                    end
-                    
-                end
-            end
-
-            puts ban
-
-        rescue SQLite3::Exception => e
-            puts "Ecepsion"
-            puts e
-        
-        end
-    end
+    
     
     def on_close
           getApp().exit(0)
@@ -110,6 +113,24 @@ class Ventana < FXMainWindow
         super
         show(PLACEMENT_SCREEN)
     end 
+
+    def registrar_maestro
+        ventana=Maestros.new(@app)
+        ventana.create
+        ventana.show(PLACEMENT_SCREEN)
+    end
+
+    def registrar_alumno
+        ventana=Registrar.new(@app)
+        ventana.create
+        ventana.show(PLACEMENT_SCREEN)
+    end
+
+    def menu #si es maestro se va al menu
+        ventana=Menu.new(@app)
+        ventana.create
+        ventana.show(PLACEMENT_SCREEN)
+    end
 
 
 end
