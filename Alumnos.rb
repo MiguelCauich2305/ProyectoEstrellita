@@ -248,9 +248,13 @@ class Alumnos < FXMainWindow
                 puts "antes de la Modificacion", numeroControl
                 begin
                     db = SQLite3::Database.open 'ProyRuby.db'
-                    r1 = db.execute "UPDATE Calificaciones SET Nombre_materia = '#{materia1Enviar}' WHERE (Nombre_materia = '#{materia1Guardada}') AND (NoControl = '#{numeroControl}');"
-                    r2 = db.execute "UPDATE Calificaciones SET Nombre_materia = '#{materia2Enviar}' WHERE (Nombre_materia = '#{materia2Guardada}') AND (NoControl = '#{numeroControl}');"
-                    r3 = db.execute "UPDATE Calificaciones SET Nombre_materia = '#{materia3Enviar}' WHERE (Nombre_materia = '#{materia3Guardada}') AND (NoControl = '#{numeroControl}');"
+                    db.execute "DELETE from Calificaciones WHERE NoControl = '#{numeroControl}';"
+                    #r1 = db.execute "UPDATE Calificaciones SET Nombre_materia = '#{materia1Enviar}' WHERE (Nombre_materia = '#{materia1Guardada}') AND (NoControl = '#{numeroControl}');"
+                    #r2 = db.execute "UPDATE Calificaciones SET Nombre_materia = '#{materia2Enviar}' WHERE (Nombre_materia = '#{materia2Guardada}') AND (NoControl = '#{numeroControl}');"
+                    #r3 = db.execute "UPDATE Calificaciones SET Nombre_materia = '#{materia3Enviar}' WHERE (Nombre_materia = '#{materia3Guardada}') AND (NoControl = '#{numeroControl}');"
+                    db.execute "INSERT INTO Calificaciones VALUES('#{numeroControl}', '#{materia1}','0','0','0');"
+                    db.execute "INSERT INTO Calificaciones VALUES('#{numeroControl}', '#{materia2}','0','0','0');"
+                    db.execute "INSERT INTO Calificaciones VALUES('#{numeroControl}', '#{materia3}','0','0','0');"
                     resultados = db.execute "UPDATE Alumnos SET NoControl = '#{numeroControl}', Nombre = '#{nombre}', Direccion = '#{direccion}', Edad = '#{edad}', M1 = '#{materia1Enviar}', M2 = '#{materia2Enviar}', M3 = '#{materia3Enviar}'  WHERE NoControl = '#{numeroControl}';"
                     db.close
                     FXMessageBox.information(app,MBOX_OK, "Exito!", "Datos actualizados!")

@@ -349,9 +349,6 @@ class Materias_maestros < FXMainWindow
             end
         end
 
-
-
-
         ##################################### ENCERRONA 3 XD (botones) ##################################################################
         #groupbox3 = FXGroupBox.new(hframe, "Acciones",:opts => GROUPBOX_NORMAL|FRAME_GROOVE|LAYOUT_FILL_X|LAYOUT_FILL_Y)
         
