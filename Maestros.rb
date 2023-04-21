@@ -16,6 +16,11 @@ class Maestros < FXMainWindow
         chrLabel = FXLabel.new(hFrame1, "Nombre:")
         nombre = FXTextField.new(hFrame1, 30)
 
+        hFramea = FXHorizontalFrame.new(self)
+        textoNombre = FXText.new(hFramea, :opts => TEXT_WORDWRAP|LAYOUT_FILL,
+            :width=>130, :height=>30,:x=>380, :y=>200)
+
+
         hFrame2 = FXHorizontalFrame.new(self)
         mat1= FXComboBox.new(hFrame2, 15)
         mat2= FXComboBox.new(hFrame2, 15)
@@ -54,11 +59,51 @@ class Maestros < FXMainWindow
 
         b3= FXButton.new(hFrame3, "Modificar") #debe de poner nombr emaestro
         b3.connect(SEL_COMMAND) do
-            modificar(nombre.text, mat1.text, mat2.text, mat3.text)
+            modificar(textoNombre.text, mat1.text, mat2.text, mat3.text)
+        end
+
+       
+
+
+        #BOTON DE BUSCAR Y MOSTRAR EL NOMBRE DEL MAESTRO
+        botonBuscar1 = FXButton.new(hFrame3,"Buscar maestro")
+        botonBuscar1.connect(SEL_COMMAND) do |sender, sel, data|
+            ban="NO EXISTE"
+
+            begin  
+                db =SQLite3::Database.open 'ProyRuby.db'
+                query= db.prepare "SELECT Nombre_maestro from Maestros ;"
+                data= query.execute
+
+                for linea in data
+                    nombre_maestro= linea[0]
+
+                    if nombre_maestro == nombre.text
+                        variable= nombre_maestro
+                        ban= "EXISTE"
+                    end 
+                end
+            rescue SQLite3::Exception => e
+                puts "Ecepsion"
+                puts e
+            
+            end
+
+            if ban == "NO EXISTE"
+                FXMessageBox.error(app, MBOX_OK, 'Error', 'El docente no existe.')
+
+            else
+                
+                textoNombre.text = "#{variable}"
+
+            end
+
         end
 
     end
 
+
+    
 
     def modificar(nombre_teacher, m1, m2, m3)
         materia1_estado= "libre"
@@ -154,6 +199,8 @@ class Maestros < FXMainWindow
                 
                 end
 
+
+                
                 funcion_modificar(nombre_teacher, m1, m2, m3)
 
             else
@@ -172,59 +219,82 @@ class Maestros < FXMainWindow
 
 
     def funcion_modificar(nombre_teacher, m1, m2, m3)
-        #Una vez liberadas las materias ahora si se actualiza la tabla de materias
-                #con las nuevas seleccionadas
-                begin 
-                    db =SQLite3::Database.open 'ProyRuby.db'
-                    query= db.prepare "UPDATE MateriasFK 
-                        SET Nombre_materia = '#{m1}', 
-                        Nombre_maestro = '#{nombre_teacher}'
-                    WHERE
-                        Nombre_materia = '#{m1}'"
-                    data= query.execute
-        
-                rescue SQLite3::Exception => e
-                    
-                    puts e
-                    
-                
-                end
-                #===================Modificar materias q quiere====================================
-            
-            
-                begin 
-                    db =SQLite3::Database.open 'ProyRuby.db'
-                    query= db.prepare "UPDATE MateriasFK 
-                        SET Nombre_materia = '#{m2}', 
-                        Nombre_maestro = '#{nombre_teacher}'
-                    WHERE
-                        Nombre_materia = '#{m2}'"
-                    data= query.execute
-        
-                rescue SQLite3::Exception => e
-                    puts "Ecepsion"
-                    puts e
-                
-                end
-                #====================Modificar materias q quiere================================
-                begin 
-                    db =SQLite3::Database.open 'ProyRuby.db'
-                    query= db.prepare "UPDATE MateriasFK 
-                        SET Nombre_materia = '#{m3}', 
-                        Nombre_maestro = '#{nombre_teacher}'
-                    WHERE
-                        Nombre_materia = '#{m3}'"
-                    data= query.execute
-        
-                rescue SQLite3::Exception => e
-                    puts "Ecepsion"
-                    puts e
-                
-                end
-                #actualizacion de nuevas materias seleccionadas para el maestro.
 
-                FXMessageBox.information(app, MBOX_OK, 'Exito', 'Materias actualizadas correctamente.')
+        
+            begin 
+                db =SQLite3::Database.open 'ProyRuby.db'
+                query= db.prepare "UPDATE Maestros 
+                    SET Nombre_maestro = '#{nombre_teacher}', 
+                    M1 = '#{m1}',
+                    M2 = '#{m2}',
+                    M3 = '#{m3}'"
+                data= query.execute
+    
+            rescue SQLite3::Exception => e
+                
+                puts e
+                
+            
+            end
+    
+            #Una vez liberadas las materias ahora si se actualiza la tabla de materias
+                    #con las nuevas seleccionadas
+                    begin 
+                        db =SQLite3::Database.open 'ProyRuby.db'
+                        query= db.prepare "UPDATE MateriasFK 
+                            SET Nombre_materia = '#{m1}', 
+                            Nombre_maestro = '#{nombre_teacher}'
+                        WHERE
+                            Nombre_materia = '#{m1}'"
+                        data= query.execute
+            
+                    rescue SQLite3::Exception => e
+                        
+                        puts e
+                        
+                    
+                    end
+                    #===================Modificar materias q quiere====================================
+                
+                
+                    begin 
+                        db =SQLite3::Database.open 'ProyRuby.db'
+                        query= db.prepare "UPDATE MateriasFK 
+                            SET Nombre_materia = '#{m2}', 
+                            Nombre_maestro = '#{nombre_teacher}'
+                        WHERE
+                            Nombre_materia = '#{m2}'"
+                        data= query.execute
+            
+                    rescue SQLite3::Exception => e
+                        puts "Ecepsion"
+                        puts e
+                    
+                    end
+                    #====================Modificar materias q quiere================================
+                    begin 
+                        db =SQLite3::Database.open 'ProyRuby.db'
+                        query= db.prepare "UPDATE MateriasFK 
+                            SET Nombre_materia = '#{m3}', 
+                            Nombre_maestro = '#{nombre_teacher}'
+                        WHERE
+                            Nombre_materia = '#{m3}'"
+                        data= query.execute
+            
+                    rescue SQLite3::Exception => e
+                        puts "Ecepsion"
+                        puts e
+                    
+                    end
+                    #actualizacion de nuevas materias seleccionadas para el maestro.
+    
+                    FXMessageBox.information(app, MBOX_OK, 'Exito', 'Materias actualizadas correctamente.')
+    
 
+
+
+
+        
 
     end
 
